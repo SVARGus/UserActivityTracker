@@ -5,16 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Diagnostics;
 
 /*
@@ -132,6 +123,10 @@ namespace UserActivityTracker
                 hookId = IntPtr.Zero;
             }
             UpdateMonitoringUi();
+
+            LogToReport(Environment.NewLine + "===================== НАЧАЛО СЕССИИ МОНИТОРИНГА =====================");
+            LogToReport($"Время запуска: {DateTime.Now}");
+            LogToReport("====================================================================" + Environment.NewLine);
         }
 
         private void ButtonRefreshReport_Click(object sender, RoutedEventArgs e)
@@ -241,36 +236,47 @@ namespace UserActivityTracker
 
         private void ProcessMonitoring()
         {
-            List<string> currentProcesses = new List<string>();
+            HashSet<int> knownProcessIds = new HashSet<int>();
+
             while (monitoring)
             {
                 try
                 {
-                    var processes = Process.GetProcesses()
-                        .Select(p => p.ProcessName.ToLower())
-                        .Distinct()
-                        .ToList();
+                    var allProcesses = Process.GetProcesses();
 
-                    var newProcesses = processes.Except(currentProcesses).ToList();
-
-                    foreach (var process in newProcesses)
+                    foreach (var proc in allProcesses)
                     {
-                        if (config.BannedApps.Contains(process))
+                        try
                         {
-                            LogToReport($"Запрещенное приложение запущено: {process} ({DateTime.Now})");
-                            KillProcess(process);
+                            if (!knownProcessIds.Contains(proc.Id))
+                            {
+                                knownProcessIds.Add(proc.Id);
+
+                                string processName = proc.ProcessName.ToLower();
+                                DateTime startTime = proc.StartTime;
+
+                                if (config.BannedApps.Contains(processName))
+                                {
+                                    LogToReport($"Запрещенное приложение запущено: {processName} ({startTime})");
+                                    KillProcess(processName);
+                                }
+                                else if (config.EnableStatistics)
+                                {
+                                    LogToReport($"Приложение запущено: {processName} ({startTime})");
+                                }
+                            }
                         }
-                        else if (config.EnableStatistics)
+                        catch
                         {
-                            LogToReport($"Приложение запущено: {process} ({DateTime.Now})");
-                        }    
+                            // Некоторые процессы могут не дать доступ к StartTime
+                        }
                     }
-                    currentProcesses = processes;
                 }
                 catch (Exception ex)
                 {
-                    LogToReport($"Ошибка при мониторинке процессов: {ex.Message} ({DateTime.Now})");
+                    LogToReport($"Ошибка при мониторинге процессов: {ex.Message} ({DateTime.Now})");
                 }
+
                 Thread.Sleep(1000);
             }
         }
