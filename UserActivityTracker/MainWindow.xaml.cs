@@ -79,6 +79,12 @@ namespace UserActivityTracker
         [DllImport("user32.dll")]
         private static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
+
         private IntPtr hookId = IntPtr.Zero;
 
         public MainWindow()
@@ -209,7 +215,10 @@ namespace UserActivityTracker
                 keyboardState[0x14] = 0x01;
             }
 
-            IntPtr hkl = GetKeyboardLayout(0);
+            IntPtr foregroundWindow = GetForegroundWindow();
+            uint threadId = GetWindowThreadProcessId(foregroundWindow, IntPtr.Zero);
+            IntPtr hkl = GetKeyboardLayout(threadId);
+
             uint scanCode = MapVirtualKey((uint)vkCode, 0);
             StringBuilder sb = new StringBuilder(5);
             int rc = ToUnicodeEx((uint)vkCode,scanCode,keyboardState,sb, sb.Capacity, 0, hkl);
@@ -235,7 +244,6 @@ namespace UserActivityTracker
             List<string> currentProcesses = new List<string>();
             while (monitoring)
             {
-                // Мониторинг всех процессов и в случае нахождения запрещенного процесса попытка его закрыть
                 try
                 {
                     var processes = Process.GetProcesses()
