@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserActivityTracker", "UserActivityTracker\UserActivityTracker.csproj", "{4C2BBEFD-3DB9-4D93-9DA1-5017E2975195}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C2BBEFD-3DB9-4D93-9DA1-5017E2975195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C2BBEFD-3DB9-4D93-9DA1-5017E2975195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C2BBEFD-3DB9-4D93-9DA1-5017E2975195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C2BBEFD-3DB9-4D93-9DA1-5017E2975195}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D9C1927-D187-4454-A8FC-00449879C3B6}
+	EndGlobalSection
+EndGlobal

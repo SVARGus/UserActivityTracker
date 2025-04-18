@@ -1,0 +1,40 @@
+﻿<Window x:Class="UserActivityTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UserActivityTracker"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" MinWidth="350">
+    <TabControl>
+        <TabItem Header="Настройки">
+            <StackPanel Margin="10">
+                <TextBlock Text="Путь к файлу отчета: "/>
+                <TextBox x:Name="TxtReportPath" MinWidth="300" Text="D:\Documents\report.txt"/>
+                <CheckBox x:Name="ChkStatistics" Content="Собирать статистику" IsChecked="True" Margin="0, 10, 0, 0"/>
+                <CheckBox x:Name="ChkModeration" Content="Включить модерацию" IsChecked="True" Margin="0, 5, 0, 0"/>
+                <TextBlock Text="Слова для модерации (через запятую): " Margin="0, 10, 0, 0"/>
+                <TextBox x:Name="TxtBannedWords" MinWidth="300" Text="badword,spam"/>
+                <TextBlock Text="Запрещенные программы (имена, через запятую): " Margin="0, 10, 0, 0"/>
+                <TextBox x:Name="TxtBannedApps" MinWidth="300" Text="ForbiddenWordScanner_WPF"/>
+                <Button Content="Применить настройки" x:Name="ButtonApplySettings" Margin="0,10,0,0" Click="ButtonApplySettings_Click"/>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Слежение">
+            <StackPanel Margin="10">
+                <TextBlock x:Name="LblMonitorStatus" Text="Слежение не запущено."/>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <Button Content="Запустить слежение" x:Name="ButtonStartMonitoring" Width="130" Margin="10" Click="ButtonStartMonitoring_Click"/>
+                    <Button Content="Остановить слежение" x:Name="ButtonStopMonitoring" Width="130" Margin="10" Click="ButtonStopMonitoring_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Отчёт">
+            <StackPanel Margin="10">
+                <TextBlock Text="Содержимое отчета: "/>
+                <TextBox x:Name="TxtReportContent" Height="300" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                <Button Content="Обновить отчет" x:Name="ButtonRefreshReport" Margin="10" Width="150" Click="ButtonRefreshReport_Click"/>
+            </StackPanel>
+        </TabItem>
+    </TabControl>
+</Window>
