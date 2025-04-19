@@ -20,7 +20,7 @@
                 <Button Content="Применить настройки" x:Name="ButtonApplySettings" Margin="0,10,0,0" Click="ButtonApplySettings_Click"/>
             </StackPanel>
         </TabItem>
-        <TabItem Header="Слежение">
+        <TabItem Header="Слежение" x:Name="TabMonitoring" IsEnabled="False">
             <StackPanel Margin="10">
                 <TextBlock x:Name="LblMonitorStatus" Text="Слежение не запущено."/>
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
@@ -32,7 +32,7 @@
         <TabItem Header="Отчёт">
             <StackPanel Margin="10">
                 <TextBlock Text="Содержимое отчета: "/>
-                <TextBox x:Name="TxtReportContent" Height="300" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                <TextBox x:Name="TxtReportContent" Height="300" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" IsReadOnly="True"/>
                 <Button Content="Обновить отчет" x:Name="ButtonRefreshReport" Margin="10" Width="150" Click="ButtonRefreshReport_Click"/>
             </StackPanel>
         </TabItem>

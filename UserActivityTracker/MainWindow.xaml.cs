@@ -87,21 +87,50 @@ namespace UserActivityTracker
 
         private void ButtonApplySettings_Click(object sender, RoutedEventArgs e)
         {
+            string reportPath = TxtReportPath.Text.Trim();
+            string directory = Path.GetDirectoryName(reportPath);
+            string fileName = Path.GetFileName(reportPath);
+
+            if (!Directory.Exists(directory))
+            {
+                MessageBox.Show($"Указанная директория для отчета не существует.\nПроверьте путь: {directory}",
+                    "Ошибка", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(fileName) || Path.GetExtension(fileName).ToLower() != ".txt")
+            {
+                MessageBox.Show("Название файла отчета должно оканчиваться на '.txt'.",
+                    "Ошибка", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
+                return;
+            }
+
             config.ReportFilePath = TxtReportPath.Text;
             config.EnableStatistics = ChkStatistics.IsChecked ?? false;
             config.EnableModeration = ChkModeration.IsChecked ?? false;
-            config.BannedWords = TxtBannedWords.Text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+            config.BannedWords = TxtBannedWords.Text
+                .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim().ToLower())
                 .ToList();
-            config.BannedApps = TxtBannedApps.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+            config.BannedApps = TxtBannedApps.Text
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim().ToLower())
                 .ToList();
 
             MessageBox.Show("Настройки применены успешно!", "Настройки", MessageBoxButton.OK, MessageBoxImage.Information);
+            TabMonitoring.IsEnabled = true;
         }
 
         private void ButtonStartMonitoring_Click(object sender, RoutedEventArgs e)
         {
+            LogToReport(Environment.NewLine + "===================== НАЧАЛО СЕССИИ МОНИТОРИНГА =====================");
+            LogToReport($"Время запуска: {DateTime.Now}");
+            LogToReport("====================================================================" + Environment.NewLine);
+
             monitoring = true;
             UpdateMonitoringUi();
 
@@ -123,10 +152,6 @@ namespace UserActivityTracker
                 hookId = IntPtr.Zero;
             }
             UpdateMonitoringUi();
-
-            LogToReport(Environment.NewLine + "===================== НАЧАЛО СЕССИИ МОНИТОРИНГА =====================");
-            LogToReport($"Время запуска: {DateTime.Now}");
-            LogToReport("====================================================================" + Environment.NewLine);
         }
 
         private void ButtonRefreshReport_Click(object sender, RoutedEventArgs e)
